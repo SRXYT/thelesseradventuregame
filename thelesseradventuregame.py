@@ -1,6 +1,37 @@
 import dearpygui.dearpygui as dpg
 import random
 import time as t
+
+# class Spider:
+#     def __init__(self):
+
+class Player:
+    def __init__(self):
+       self.player_hp = 100
+       self.player_name = ""
+       self.hp_potions = 3
+
+    def set_player_name(self, name):
+       self.player_name = name
+    
+    def get_player_name(self):
+        return self.player_name
+    
+    def lose_hp(self, hp):
+        self.player_hp -= hp
+    
+    def attack(self, enemy):
+        is_crit = random.randint(1,100)
+        damage = random.randint(10, 50)
+        if is_crit < 25:
+            game.input_to_output("\nCRIT DAMAGE!")
+            game.input_to_output(f"You deal {damage*2} to {enemy}")
+            enemy.lose_hp(damage*2)
+        else:
+            game.input_to_output(f"You deal {damage} to {enemy}")
+            enemy.lose_hp(damage)
+
+
 class Game:
     def __init__(self):
         self.primary_window_height = 600
@@ -10,10 +41,11 @@ class Game:
         self.console_text = ""
         self.user_input = ""
         self.input_received = False
-        self.player_hp = 100
-        self.player_name = ""
-        self.num_of_floors = random.randint(1, 15)
-
+        self.num_of_floors = random.randint(3, 15)
+        self.easy_floors = self.num_of_floors//3
+        self.med_floors = self.num_of_floors//3
+        self.hard_floors = self.num_of_floors//3
+        self.easy_floors += (self.num_of_floors%3)
 
     def input_to_output(self, app_data):
         if app_data.strip():  # Only process if there is actual input
@@ -28,7 +60,7 @@ class Game:
 
     def wait_for_input(self):
         self.input_received = False
-        while not self.input_received:
+        while not self.input_received and dpg.is_dearpygui_running():
             dpg.render_dearpygui_frame()
 
     def main_game(self):
@@ -40,24 +72,35 @@ class Game:
         else:
             self.input_to_output("You consider leaving but decide what's the point in standing in front of a cave if you're not going to enter it, so you enter it anyway.")
         self.input_to_output(f"The cave has {self.num_of_floors} floors to beat before you reach the final boss")
+        self.input_to_output("Are you ready? (Enter anything to continue)")
+        self.wait_for_input()
+        round = 1
+        for i in range(self.easy_floors):
+            self.input_to_output(f"\nFloor {round+1}\n")
+            num_of_spider = random.randint(1, 5)
+            round += 1
+
+
+
 
     def init_game(self):
         self.input_to_output("WELCOME TO THE GAME")
         self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon")
         self.input_to_output("Please enter your character name: ")
         self.wait_for_input()  # Wait for user input
-        self.player_name = self.user_input  # Get the entered name
-        self.input_to_output(f"Welcome to the game {self.player_name}!")
+        player_name = self.user_input  # Get the entered name
+        player = Player()
+        player.set_player_name(player_name)
+        self.input_to_output(f"Welcome to the game {player.get_player_name()}!")
         self.input_to_output("\nYou are about to embark on a dangerous journey to defeat the dragon and save the kingdom.")
         self.input_to_output("You have 100 HP (Health Points) to start with. If your HP drops to 0, you will be defeated and the game ends.")
         self.input_to_output("Are you ready to begin? (yes/no)")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
             self.input_to_output("Great! Let's get started.")
-            self.main_game()
         else:
-            self.input_to_output("That's too bad. Maybe next time.")
-            dpg.stop_dearpygui()
+            self.input_to_output("That's too bad.")
+        self.main_game()
 
     def setup_gui(self):
         dpg.create_context()
