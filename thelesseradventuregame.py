@@ -8,7 +8,7 @@ class Player:
     def __init__(self):
        self.player_hp = 100
        self.player_name = ""
-       self.hp_potions = 3
+       self.hp_potions = 2
        self.attack_power = 0
        self.gold = 0
 
@@ -182,12 +182,12 @@ class Game:
         hp_potion_chance = random.randint(1, 100)
         better_weapon_chance = random.randint(1, 100)
         gold_chance = random.randint(1, 100)
-        gold_amount = random.randint(10, 300)
-        if gold_chance < 50:
+        gold_amount = random.randint(10, 100)
+        if gold_chance < 30:
             player.gold += gold_amount
             game.input_to_output(f"\nYou found {gold_amount} gold!")
             game.input_to_output(f"You now have {player.gold} gold\n")
-        if hp_potion_chance < 25:
+        if hp_potion_chance < 15:
             player.hp_potions += 1
             game.input_to_output("\nYou found a HP potion!")
             game.input_to_output(f"You now have {player.hp_potions} HP potions\n")
@@ -195,7 +195,7 @@ class Game:
             player.attack_power += 10
             game.input_to_output("\nYou found a better weapon!")
             game.input_to_output("Your attack power has increased\n")
-        if hp_potion_chance >= 25 and better_weapon_chance >= 15:
+        if hp_potion_chance >= 25 and better_weapon_chance >= 15 and gold_chance >= 50:
             game.input_to_output("\nYou found nothing useful\n")
 
 # Input and Output
@@ -206,6 +206,8 @@ class Game:
             self.user_input = app_data  # Store the user input
             # Update the output box with the new console_text
             dpg.set_value("output_box", self.console_text)
+            # Scroll to botom of output box
+
             # Clear the input field
             dpg.set_value("input_box", "")
             dpg.focus_item("input_box")
@@ -260,7 +262,7 @@ class Game:
         self.input_to_output("1. Attack")
         self.input_to_output("2. Use HP Potion")
         self.input_to_output("3. Shop")
-        self.input_to_output(f"You have {player.player_hp} HP!")
+        self.input_to_output(f"You have {player.player_hp} HP!\n")
         self.wait_for_input()
         if self.user_input == "1":
             player.attack(enemy)
@@ -281,7 +283,7 @@ class Game:
             self.input_to_output("What would you like to buy?")
             self.input_to_output("1. HP Potion (50 gold)")
             self.input_to_output("2. Better Weapon (100 gold)")
-            self.input_to_output("3. Leave")
+            self.input_to_output("3. Leave\n")
             self.wait_for_input()
             if self.user_input == "1":
                 if player.gold >= 50:
@@ -309,12 +311,12 @@ class Game:
 
     def main_game(self, player):
         self.input_to_output("You are standing in front of a cave. You can see the dragon's lair inside the cave.")
-        self.input_to_output("What would you like to do? (enter the cave/leave)")
+        self.input_to_output("What would you like to do? (enter the cave/leave)\n")
         self.wait_for_input()
         if self.user_input.lower() == "enter the cave":
-            self.input_to_output("You have entered the cave!")
+            self.input_to_output("\nYou have entered the cave!\n")
         else:
-            self.input_to_output("You consider leaving but decide what's the point in standing in front of a cave if you're not going to enter it, so you enter it anyway.")
+            self.input_to_output("\nYou consider leaving but decide what's the point in standing in front of a cave if you're not going to enter it, so you enter it anyway.\n")
         self.input_to_output(f"The cave has {self.num_of_floors} floors to beat before you reach the final boss")
         self.input_to_output("Are you ready? (Enter anything to continue)\n")
         self.wait_for_input()
@@ -339,8 +341,8 @@ class Game:
             round += 1
         for i in range(self.med_floors):
             self.input_to_output(f"\nFloor {round}\n")
-            num_of_spider = random.randint(1, 5)
-            num_of_skeleton = random.randint(1, 3)
+            num_of_spider = random.randint(1, 3)
+            num_of_skeleton = random.randint(2, 5)
             self.input_to_output(f"You see {num_of_spider} spiders and {num_of_skeleton} ahead!\n")
             spiders = {}
             skeletons = {}
@@ -371,9 +373,9 @@ class Game:
             round += 1
         for i in range(self.hard_floors):
             self.input_to_output(f"\nFloor {round}\n")
-            num_of_skeleton = random.randint(1, 5)
-            num_of_orc = random.randint(1, 3)
-            num_of_imp = random.randint(1, 2)
+            num_of_skeleton = random.randint(1, 2)
+            num_of_orc = random.randint(2, 3)
+            num_of_imp = random.randint(2, 4)
             self.input_to_output(f"You see {num_of_skeleton} skeletons, {num_of_orc} orcs and {num_of_imp} imps ahead!\n")
             skeletons = {}
             orcs = {}
@@ -419,24 +421,31 @@ class Game:
 # Initialize Game
 
     def init_game(self, player):
-        # TODO - Add console Reset here and any other initialization
+        self.console_text = ""
+        self.user_input = ""
+        self.num_of_floors = random.randint(3, 15)
+        self.easy_floors = self.num_of_floors//3
+        self.med_floors = self.num_of_floors//3
+        self.hard_floors = self.num_of_floors//3
+        self.easy_floors += (self.num_of_floors%3)
         self.input_to_output("WELCOME TO THE GAME")
-        self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon")
+        self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon\n")
         self.input_to_output("Please enter your character name: ")
         self.wait_for_input()  # Wait for user input
         player_name = self.user_input  # Get the entered name
         player.set_player_name(player_name)
         player.reset_stats()
-        self.input_to_output(f"Welcome to the game {player.get_player_name()}!")
+        self.input_to_output(f"\nWelcome to the game {player.get_player_name()}!")
         self.input_to_output("\nYou are about to embark on a dangerous journey to defeat the dragon and save the kingdom.")
         self.input_to_output("You have 100 HP (Health Points) to start with. If your HP drops to 0, you will be defeated and the game ends.")
-        self.input_to_output("Are you ready to begin? (yes/no)")
+        self.input_to_output("Are you ready to begin? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
-            self.input_to_output("Great! Let's get started.")
+            self.input_to_output("\nGreat! Let's get started.")
         else:
-            self.input_to_output("That's too bad.")
+            self.input_to_output("\nThat's too bad.")
         self.main_game(player)
+
 
 # GUI
 
@@ -453,10 +462,12 @@ class Game:
         # Output Box
         with dpg.window(label="Output", show=True, width=self.output_window_width, height=self.output_window_height,
                         no_resize=True, no_move=True, no_close=True, no_collapse=True, no_title_bar=True, pos=(10, 10)):
-            dpg.add_input_text(default_value=self.console_text, readonly=True,  # Make it non-editable
-                               tag="output_box", multiline=True, width=self.output_window_width-20,
-                               height=self.output_window_height-20, pos=(10, 10), callback=None, tracked=True,
-                               track_offset=1.0)
+            # dpg.add_input_text(default_value=self.console_text, readonly=True,  # Make it non-editable
+            #                    tag="output_box", multiline=True, width=self.output_window_width-20,
+            #                    height=self.output_window_height-20, pos=(10, 10), callback=None, tracked=True,
+            #                    track_offset=1.0)
+            dpg.add_text(default_value=self.console_text,  # Make it non-editable
+                tag="output_box", wrap=self.output_window_width-20)
 
         dpg.setup_dearpygui()
         dpg.show_viewport()
