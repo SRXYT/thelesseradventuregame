@@ -32,11 +32,11 @@ class Player:
         base_damage = random.randint(10, 50)
         total_damage = base_damage + self.attack_power
         if is_crit < 25:
-            game.input_to_output("\nCRIT DAMAGE!")
+            game.input_to_output("\nCRIT DAMAGE!!")
             game.input_to_output(f"You deal {total_damage*2} to {enemy.name}")
             enemy.lose_hp(total_damage*2)
         else:
-            game.input_to_output(f"You deal {total_damage} to {enemy.name}")
+            game.input_to_output(f"\nYou deal {total_damage} to {enemy.name}")
             enemy.lose_hp(total_damage)
 
 # Spider Class
@@ -163,7 +163,7 @@ class Imp:
 
 class Game:
     def __init__(self):
-        self.primary_window_height = 600
+        self.primary_window_height = 630
         self.primary_window_width = 1000
         self.output_window_height = 510
         self.output_window_width = 965
@@ -182,21 +182,20 @@ class Game:
         hp_potion_chance = random.randint(1, 100)
         better_weapon_chance = random.randint(1, 100)
         gold_chance = random.randint(1, 100)
-        gold_amount = random.randint(10, 100)
+        gold_amount = random.randint(10, 200)
         if gold_chance < 30:
             player.gold += gold_amount
-            game.input_to_output(f"\nYou found {gold_amount} gold!")
-            game.input_to_output(f"You now have {player.gold} gold\n")
+            game.input_to_output(f"\nYou found {gold_amount} gold!\n")
         if hp_potion_chance < 15:
             player.hp_potions += 1
-            game.input_to_output("\nYou found a HP potion!")
-            game.input_to_output(f"You now have {player.hp_potions} HP potions\n")
+            game.input_to_output("\nYou found a HP potion!\n")
         if better_weapon_chance < 15:
             player.attack_power += 10
             game.input_to_output("\nYou found a better weapon!")
             game.input_to_output("Your attack power has increased\n")
-        if hp_potion_chance >= 25 and better_weapon_chance >= 15 and gold_chance >= 50:
+        if hp_potion_chance >= 15 and better_weapon_chance >= 15 and gold_chance >= 30:
             game.input_to_output("\nYou found nothing useful\n")
+        self.update_labels(player.player_hp, player.gold, player.hp_potions, player.attack_power)
 
 # Input and Output
 
@@ -206,7 +205,7 @@ class Game:
             self.user_input = app_data  # Store the user input
             # Update the output box with the new console_text
             dpg.set_value("output_box", self.console_text)
-            # Scroll to botom of output box
+            # Scroll to bottom of output box
 
             # Clear the input field
             dpg.set_value("input_box", "")
@@ -223,12 +222,12 @@ class Game:
 
     def game_over(self):
         self.input_to_output("Game Over!")
-        self.input_to_output("/nStats:/n")
+        self.input_to_output("\nStats:\n")
         self.input_to_output(f"Name: {player.get_player_name()}")
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
-        self.input_to_output("Would you like to play again? (yes/no)")
+        self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
             self.init_game(player)
@@ -239,13 +238,13 @@ class Game:
     
     def game_win(self):
         self.input_to_output("Congratulations!")
-        self.input_to_output("You have defeated the dragon and saved the kingdom!")
-        self.input_to_output("/nStats:/n")
+        self.input_to_output("You have defeated the dragon and saved the kingdom!\n")
+        self.input_to_output("\nStats:\n")
         self.input_to_output(f"Name: {player.get_player_name()}")
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
-        self.input_to_output("Would you like to play again? (yes/no)")
+        self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
             self.init_game(player)
@@ -261,8 +260,7 @@ class Game:
         self.input_to_output("\nWhat will you do?")
         self.input_to_output("1. Attack")
         self.input_to_output("2. Use HP Potion")
-        self.input_to_output("3. Shop")
-        self.input_to_output(f"You have {player.player_hp} HP!\n")
+        self.input_to_output("3. Shop\n")
         self.wait_for_input()
         if self.user_input == "1":
             player.attack(enemy)
@@ -271,15 +269,12 @@ class Game:
             if player.hp_potions > 0:
                 player.hp_potions -= 1
                 player.player_hp += 50
-                self.input_to_output("\nYou used a HP potion and gained 50 HP!")
-                self.input_to_output(f"You have {player.hp_potions} HP potions left")
-                self.input_to_output(f"You now have {player.player_hp} HP\n")
+                self.input_to_output("\nYou used a HP potion and gained 50 HP!\n")
                 enemy.attack(player)
             else:
                 self.input_to_output("\nYou don't have any HP potions left!\n")
         elif self.user_input == "3":
             self.input_to_output("\nYou have entered the shop!")
-            self.input_to_output(f"You have {player.gold} gold")
             self.input_to_output("What would you like to buy?")
             self.input_to_output("1. HP Potion (50 gold)")
             self.input_to_output("2. Better Weapon (100 gold)")
@@ -289,9 +284,7 @@ class Game:
                 if player.gold >= 50:
                     player.gold -= 50
                     player.hp_potions += 1
-                    self.input_to_output("\nYou bought a HP potion!")
-                    self.input_to_output(f"You now have {player.hp_potions} HP potions")
-                    self.input_to_output(f"You now have {player.gold} gold\n")
+                    self.input_to_output("\nYou bought a HP potion!\n")
                 else:
                     self.input_to_output("\nYou don't have enough gold!\n")
             elif self.user_input == "2":
@@ -300,11 +293,11 @@ class Game:
                     player.attack_power += 10
                     self.input_to_output("\nYou bought a better weapon!")
                     self.input_to_output("Your attack power has increased\n")
-                    self.input_to_output(f"You now have {player.gold} gold\n")
                 else:
                     self.input_to_output("\nYou don't have enough gold!\n")
             elif self.user_input == "3":
                 self.input_to_output("\nYou have left the shop\n")
+        self.update_labels(player.player_hp, player.gold, player.hp_potions, player.attack_power)
         
 
 # Main Game
@@ -343,7 +336,7 @@ class Game:
             self.input_to_output(f"\nFloor {round}\n")
             num_of_spider = random.randint(1, 3)
             num_of_skeleton = random.randint(2, 5)
-            self.input_to_output(f"You see {num_of_spider} spiders and {num_of_skeleton} ahead!\n")
+            self.input_to_output(f"You see {num_of_spider} spiders and {num_of_skeleton} skeletons ahead!\n")
             spiders = {}
             skeletons = {}
             for j in range(num_of_spider):
@@ -435,6 +428,8 @@ class Game:
         player_name = self.user_input  # Get the entered name
         player.set_player_name(player_name)
         player.reset_stats()
+        self.update_player_name_label(player.get_player_name())
+        self.update_labels(player.player_hp, player.gold, player.hp_potions, player.attack_power)
         self.input_to_output(f"\nWelcome to the game {player.get_player_name()}!")
         self.input_to_output("\nYou are about to embark on a dangerous journey to defeat the dragon and save the kingdom.")
         self.input_to_output("You have 100 HP (Health Points) to start with. If your HP drops to 0, you will be defeated and the game ends.")
@@ -446,6 +441,16 @@ class Game:
             self.input_to_output("\nThat's too bad.")
         self.main_game(player)
 
+# Update GUI labels
+
+    def update_player_name_label(self, player_name):
+        dpg.set_value("player_name_label", f"Name: {player_name}")
+
+    def update_labels(self, player_hp, gold, hp_potions, weapon_attack):
+        dpg.set_value("player_hp_label", f"HP: {player_hp}")
+        dpg.set_value("gold_label", f"Gold: {gold}")
+        dpg.set_value("hp_potions_label", f"HP Potions: {hp_potions}")
+        dpg.set_value("weapon_attack_label", f"Additional Damage: {weapon_attack}")
 
 # GUI
 
@@ -455,6 +460,12 @@ class Game:
 
         # Main Window
         with dpg.window(label="Main Window", tag="primary_window"):
+            # Player Stats
+            dpg.add_text(default_value="Name: ", tag="player_name_label", pos=(10, self.primary_window_height-100))
+            dpg.add_text(default_value="HP: 0", tag="player_hp_label", pos=(100, self.primary_window_height-100))
+            dpg.add_text(default_value="Gold: 0", tag="gold_label", pos=(200, self.primary_window_height-100))
+            dpg.add_text(default_value="HP Potions: 0", tag="hp_potions_label", pos=(380, self.primary_window_height-100))
+            dpg.add_text(default_value="Additional Damage: 0", tag="weapon_attack_label", pos=(590, self.primary_window_height-100))
             # Input box
             dpg.add_input_text(width=self.primary_window_width-37, pos=(10, self.primary_window_height-70),
                                callback=lambda s, a, u: self.input_to_output(a), on_enter=True, tag="input_box")
