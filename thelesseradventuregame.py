@@ -43,16 +43,16 @@ class Player:
 
 class Spider:
     def __init__(self, name):
-        self.spider_hp = 50
+        self.hp = 50
         self.name = name
     
     def lose_hp(self, hp):
-        self.spider_hp -= hp
+        self.hp -= hp
     
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(1, 10)
-        if self.spider_hp >= 0:
+        if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"Spider deals {damage*2} to {player.get_player_name()}")
@@ -175,6 +175,33 @@ class Game:
         self.med_floors = self.num_of_floors//3
         self.hard_floors = self.num_of_floors//3
         self.easy_floors += (self.num_of_floors%3)
+        self.enemy_names = [
+    "Venus", "Grimfang", "Blightbane", "Dreadmire", "Shadeclaw",
+    "Wraithsong", "Ashstorm", "Soulrend", "Nightshade", "Frostbite",
+    "Doombringer", "Ironfang", "Cinderbane", "Bloodshroud", "Darkthorn",
+    "Stoneheart", "Vortex", "Deathweaver", "Frostlash", "Venomstrike",
+    "Skullcrusher", "Flameheart", "Gloomspire", "Shadowrend", "Thunderclaw",
+    "Blackthorn", "Soulflare", "Fangstorm", "Gravebane", "Hellfire",
+    "Bladewraith", "Corrosive", "Doomfury", "Nightstalker", "Baneclaw",
+    "Gravefang", "Vileheart", "Ragehowl", "Lurker", "Shadowbane",
+    "Soulcrusher", "Ravager", "Dreadwolf", "Phantom", "Cinderclaw",
+    "Ironmaw", "Bloodfang", "Plagueborn", "Vampyre", "Skullmaw",
+    "Hollowfang", "Stormrage", "Soulmaw", "Gravecaller", "Vileclaw",
+    "Frostfang", "Ashen", "Doomstalker", "Nightmaw", "Wraithbane",
+    "Obsidian", "Shadefang", "Witchbane", "Hellsworn", "Flarefang",
+    "Thunderfang", "Soulshred", "Mawclaw", "Dreadfang", "Darkflame",
+    "Cursed", "Venomlash", "Frostmaw", "Ravencall", "Skullflame",
+    "Vengeful", "Blightstorm", "Phantomclaw", "Hellspawn", "Nightbringer",
+    "Stormfang", "Ironclaw", "Lurking", "Crimsonfang", "Graveflame",
+    "Soulblight", "Frostbane", "Dreadclaw", "Fangsoul", "Gloombane",
+    "Blightspike", "Mirefang", "Bloodbane", "Darkfang", "Fireclaw",
+    "Venombite", "Ashclaw", "Stormwraith", "Lichclaw", "Doomflame",
+    "Fangstrike", "Witchclaw", "Hellclaw", "Ragefang", "Blightclaw",
+    "Shadowflame", "Wraithclaw", "Skullblight", "Nightfury", "Soulfang",
+    "Blightmaw", "Froststrike", "Hollowclaw", "Vilefang", "Grimsoul",
+    "Cindersoul", "Frostshroud", "Dreadblight", "Bloodflame", "Shadowspike"
+]
+
 
 # Player Drops
 
@@ -205,8 +232,6 @@ class Game:
             self.user_input = app_data  # Store the user input
             # Update the output box with the new console_text
             dpg.set_value("output_box", self.console_text)
-            # Scroll to bottom of output box
-
             # Clear the input field
             dpg.set_value("input_box", "")
             dpg.focus_item("input_box")
@@ -215,6 +240,7 @@ class Game:
 
     def wait_for_input(self):
         self.input_received = False
+        dpg.set_y_scroll("output_window", dpg.get_y_scroll_max("output_window")+100000)
         while not self.input_received and dpg.is_dearpygui_running():
             dpg.render_dearpygui_frame()
 
@@ -233,7 +259,6 @@ class Game:
             self.init_game(player)
         else:
             self.input_to_output("Thanks for playing!")
-            t.sleep(2)
             dpg.stop_dearpygui()
     
     def game_win(self):
@@ -250,7 +275,6 @@ class Game:
             self.init_game(player)
         else:
             self.input_to_output("Thanks for playing!")
-            t.sleep(2)
             dpg.stop_dearpygui()
         
 
@@ -306,7 +330,7 @@ class Game:
         self.input_to_output("You are standing in front of a cave. You can see the dragon's lair inside the cave.")
         self.input_to_output("What would you like to do? (enter the cave/leave)\n")
         self.wait_for_input()
-        if self.user_input.lower() == "enter the cave":
+        if self.user_input.lower() == "enter the cave" or self.user_input.lower() == "enter cave" or self.user_input.lower() == "enter":
             self.input_to_output("\nYou have entered the cave!\n")
         else:
             self.input_to_output("\nYou consider leaving but decide what's the point in standing in front of a cave if you're not going to enter it, so you enter it anyway.\n")
@@ -318,15 +342,16 @@ class Game:
             self.input_to_output(f"\nFloor {round}\n")
             num_of_spider = random.randint(1, 5)
             self.input_to_output(f"You see {num_of_spider} spiders ahead!\n")
-            spiders = {}
+            enemies = []
             for j in range(num_of_spider):
-                spider_name = "Spider " + str(j + 1)
+                spider_name = random.choice(self.enemy_names) + " the spider"
                 spider = Spider(spider_name)
-                spiders[spider_name] = spider 
-            for spider in spiders:
-                self.input_to_output(f"\n{spider} appears!")
-                while player.player_hp > 0 and spiders[spider].spider_hp > 0:
-                    self.battle_menu(player, spiders[spider])
+                enemies.append(spider) 
+            random.shuffle(enemies)
+            for enemy in enemies:
+                self.input_to_output(f"\n{enemy.name} appears!")
+                while player.player_hp > 0 and enemy.hp > 0:
+                    self.battle_menu(player, enemy)
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
@@ -337,28 +362,20 @@ class Game:
             num_of_spider = random.randint(1, 3)
             num_of_skeleton = random.randint(2, 5)
             self.input_to_output(f"You see {num_of_spider} spiders and {num_of_skeleton} skeletons ahead!\n")
-            spiders = {}
-            skeletons = {}
+            enemies = []
             for j in range(num_of_spider):
-                spider_name = "Spider " + str(j + 1)
+                spider_name = random.choice(self.enemy_names) + " the spider"
                 spider = Spider(spider_name)
-                spiders[spider_name] = spider
+                enemies.append(spider) 
             for k in range(num_of_skeleton):
-                skeleton_name = "Skeleton " + str(k + 1)
+                skeleton_name = random.choice(self.enemy_names) + " the skeleton"
                 skeleton = Skeleton(skeleton_name)
-                skeletons[skeleton_name] = skeleton 
-            for spider in spiders:
-                self.input_to_output(f"\n{spider} appears!")
-                while player.player_hp > 0 and spiders[spider].spider_hp > 0:
-                    self.battle_menu(player, spiders[spider])
-                    if player.player_hp <= 0:
-                        self.input_to_output("You have been defeated!")
-                        self.game_over()
-                self.drops(player)
-            for skeleton in skeletons:
-                self.input_to_output(f"\n{skeleton} appears!")
-                while player.player_hp > 0 and skeletons[skeleton].skeleton_hp > 0:
-                    self.battle_menu(player, skeletons[skeleton])
+                enemies.append(skeleton) 
+            random.shuffle(enemies)
+            for enemy in enemies:
+                self.input_to_output(f"\n{enemy.name} appears!")
+                while player.player_hp > 0 and enemy.hp > 0:
+                    self.battle_menu(player, enemy)
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
@@ -367,44 +384,27 @@ class Game:
         for i in range(self.hard_floors):
             self.input_to_output(f"\nFloor {round}\n")
             num_of_skeleton = random.randint(1, 2)
-            num_of_orc = random.randint(2, 3)
+            num_of_orc = random.randint(2, 4)
             num_of_imp = random.randint(2, 4)
             self.input_to_output(f"You see {num_of_skeleton} skeletons, {num_of_orc} orcs and {num_of_imp} imps ahead!\n")
-            skeletons = {}
-            orcs = {}
-            imps = {}
+            enemies = []
             for j in range(num_of_skeleton):
-                skeleton_name = "Skeleton " + str(j + 1)
+                skeleton_name = random.choice(self.enemy_names) + " the skeleton"
                 skeleton = Skeleton(skeleton_name)
-                skeletons[skeleton_name] = skeleton
+                enemies.append(skeleton) 
             for k in range(num_of_orc):
-                orc_name = "Orc " + str(k + 1)
+                orc_name = random.choice(self.enemy_names) + " the orc"
                 orc = Orc(orc_name)
-                orcs[orc_name] = orc
+                enemies.append(orc) 
             for l in range(num_of_imp):
-                imp_name = "Imp " + str(l + 1)
+                imp_name = random.choice(self.enemy_names) + " the imp"
                 imp = Imp(imp_name)
-                imps[imp_name] = imp
-            for skeleton in skeletons:
-                self.input_to_output(f"\n{skeleton} appears!")
-                while player.player_hp > 0 and skeletons[skeleton].skeleton_hp > 0:
-                    self.battle_menu(player, skeletons[skeleton])
-                    if player.player_hp <= 0:
-                        self.input_to_output("You have been defeated!")
-                        self.game_over()
-                self.drops(player)
-            for orc in orcs:
-                self.input_to_output(f"\n{orc} appears!")
-                while player.player_hp > 0 and orcs[orc].orc_hp > 0:
-                    self.battle_menu(player, orcs[orc])
-                    if player.player_hp <= 0:
-                        self.input_to_output("You have been defeated!")
-                        self.game_over()
-                self.drops(player)
-            for imp in imps:
-                self.input_to_output(f"\n{imp} appears!")
-                while player.player_hp > 0 and imps[imp].imp_hp > 0:
-                    self.battle_menu(player, imps[imp])
+                enemies.append(imp) 
+            random.shuffle(enemies)
+            for enemy in enemies:
+                self.input_to_output(f"\n{enemy.name} appears!")
+                while player.player_hp > 0 and enemy.hp > 0:
+                    self.battle_menu(player, enemy)
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
@@ -471,7 +471,7 @@ class Game:
                                callback=lambda s, a, u: self.input_to_output(a), on_enter=True, tag="input_box")
 
         # Output Box
-        with dpg.window(label="Output", show=True, width=self.output_window_width, height=self.output_window_height,
+        with dpg.window(label="Output",tag="output_window" ,show=True, width=self.output_window_width, height=self.output_window_height,
                         no_resize=True, no_move=True, no_close=True, no_collapse=True, no_title_bar=True, pos=(10, 10)):
             # dpg.add_input_text(default_value=self.console_text, readonly=True,  # Make it non-editable
             #                    tag="output_box", multiline=True, width=self.output_window_width-20,
