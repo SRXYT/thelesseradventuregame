@@ -2,6 +2,8 @@ import dearpygui.dearpygui as dpg
 import random
 import time as t
 
+# Intended to be unique every time you play it
+
 # Player Class
 
 class Player:
@@ -161,7 +163,7 @@ class Imp:
 # Game Class
 
 class Game:
-    # Random Enemy Names Class Attribute
+# Random Enemy Names Class Attribute
     ENEMY_NAMES = [
     "Abaddon", "Azazel", "Balrog", "Belphegor", "Beleth", "Cerberon", "Daemonis", "Diavolos", "Erebus", "Hecatross",
     "Infernum", "Malphas", "Zarathus", "Apollyon", "Asmodeus", "Barbatos", "Bathin", "Bilegor", "Caligoth", "Choronzon",
@@ -174,6 +176,9 @@ class Game:
     "Bloodveil", "Soulmire", "Dreadspire", "Nightshade", "Darkspire", "Venomborn", "Voidmaw", "Pyrefiend", "Netherlord", "Blazewrath",
     "Plaguespire", "Hellwrath", "Foulthorn", "Dreadmaw", "Deathforge", "Rotbane", "Voidrend", "Cinderfang", "Flamescourge", "Maligore"
 ]
+    
+# Initialize Game Class Attributes
+
     def __init__(self):
         self.primary_window_height = 630
         self.primary_window_width = 1000
@@ -182,11 +187,13 @@ class Game:
         self.console_text = ""
         self.user_input = ""
         self.input_received = False
+        self.total_num_enemies = 0 ##### TODO: Add more stats to end game
         self.num_of_floors = random.randint(3, 15)
-        self.easy_floors = self.num_of_floors//3
-        self.med_floors = self.num_of_floors//3
-        self.hard_floors = self.num_of_floors//3
-        self.easy_floors += (self.num_of_floors%3)
+        # Adds a change of difficulty to the game (more interesting)
+        self.easy_floors = self.num_of_floors//3 # Num of easy floors
+        self.med_floors = self.num_of_floors//3 # Num of medium floors
+        self.hard_floors = self.num_of_floors//3 # Num of hard floors
+        self.easy_floors += (self.num_of_floors%3) # Add the remainder to the easy floors
 
 
 
@@ -227,7 +234,7 @@ class Game:
 
     def wait_for_input(self):
         self.input_received = False
-        dpg.set_y_scroll("output_window", dpg.get_y_scroll_max("output_window")+100000)
+        dpg.set_y_scroll("output_window", dpg.get_y_scroll_max("output_window")+1000000000)
         while not self.input_received and dpg.is_dearpygui_running():
             dpg.render_dearpygui_frame()
 
@@ -247,7 +254,9 @@ class Game:
         else:
             self.input_to_output("Thanks for playing!")
             dpg.stop_dearpygui()
-    
+
+# Game Win
+
     def game_win(self):
         self.input_to_output("Congratulations!")
         self.input_to_output("You have defeated the dragon and saved the kingdom!\n")
@@ -483,6 +492,8 @@ class Game:
         dpg.setup_dearpygui()
         dpg.show_viewport()
         dpg.set_primary_window("primary_window", True)
+
+# Start Game
 
     def start(self, player):
         self.setup_gui()
