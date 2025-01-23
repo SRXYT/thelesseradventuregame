@@ -467,6 +467,11 @@ class Game:
         dpg.create_context()
         dpg.create_viewport(title='The adventure Game: DND', width=self.primary_window_width, height=self.primary_window_height, resizable=False)
 
+        # add a font registry
+        with dpg.font_registry():
+            # first argument ids the path to the .ttf or .otf file
+            font = dpg.add_font("assets/fonts/scb.ttf", 20)
+
         # Main Window
         with dpg.window(label="Main Window", tag="primary_window"):
             # Player Stats
@@ -488,6 +493,7 @@ class Game:
             #                    track_offset=1.0)
             dpg.add_text(default_value=self.console_text,  # Make it non-editable
                 tag="output_box", wrap=self.output_window_width-20)
+            dpg.bind_font(font)
 
         dpg.setup_dearpygui()
         dpg.show_viewport()
