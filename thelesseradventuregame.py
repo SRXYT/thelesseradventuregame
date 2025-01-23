@@ -20,10 +20,9 @@ class Player:
     
     def lose_hp(self, hp):
         self.player_hp -= hp
-    
     def reset_stats(self):
         self.player_hp = 100
-        self.hp_potions = 3
+        self.hp_potions = 2
         self.attack_power = 0
         self.gold = 0
 
@@ -55,10 +54,10 @@ class Spider:
         if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
-                game.input_to_output(f"Spider deals {damage*2} to {player.get_player_name()}")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
                 player.lose_hp(damage*2)
             else:
-                game.input_to_output(f"\nSpider deals {damage} to {player.get_player_name()}")
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
                 player.lose_hp(damage)
         else:
             game.input_to_output(f"{self.name} has been defeated!")
@@ -67,22 +66,22 @@ class Spider:
 
 class Slime:
     def __init__(self, name):
-        self.slime_hp = 50
+        self.hp = 50
         self.name = name
     
     def lose_hp(self, hp):
-        self.slime_hp -= hp
+        self.hp -= hp
     
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(1, 10)
-        if self.slime_hp >= 0:
+        if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
-                game.input_to_output(f"Slime deals {damage*2} to {player.get_player_name()}")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
                 player.lose_hp(damage*2)
             else:
-                game.input_to_output(f"\nSlime deals {damage} to {player.get_player_name()}")
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
                 player.lose_hp(damage)
         else:
             game.input_to_output(f"{self.name} has been defeated!")
@@ -91,22 +90,22 @@ class Slime:
 
 class Skeleton:
     def __init__(self, name):
-        self.skeleton_hp = 100
+        self.hp = 100
         self.name = name
     
     def lose_hp(self, hp):
-        self.skeleton_hp -= hp
+        self.hp -= hp
     
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(10, 20)
-        if self.skeleton_hp >= 0:
+        if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
-                game.input_to_output(f"Skeleton deals {damage*2} to {player.get_player_name()}")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
                 player.lose_hp(damage*2)
             else:
-                game.input_to_output(f"\nSkeleton deals {damage} to {player.get_player_name()}")
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
                 player.lose_hp(damage)
         else:
             game.input_to_output(f"{self.name} has been defeated!")
@@ -115,22 +114,22 @@ class Skeleton:
 
 class Orc:
     def __init__(self, name):
-        self.orc_hp = 150
+        self.hp = 150
         self.name = name
     
     def lose_hp(self, hp):
-        self.orc_hp -= hp
+        self.hp -= hp
     
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(20, 30)
-        if self.orc_hp >= 0:
+        if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
-                game.input_to_output(f"Orc deals {damage*2} to {player.get_player_name()}")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
                 player.lose_hp(damage*2)
             else:
-                game.input_to_output(f"\nOrc deals {damage} to {player.get_player_name()}")
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
                 player.lose_hp(damage)
         else:
             game.input_to_output(f"{self.name} has been defeated!")
@@ -139,22 +138,22 @@ class Orc:
 
 class Imp:
     def __init__(self, name):
-        self.imp_hp = 200
+        self.hp = 200
         self.name = name
     
     def lose_hp(self, hp):
-        self.imp_hp -= hp
+        self.hp -= hp
     
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(30, 40)
-        if self.imp_hp >= 0:
+        if self.hp >= 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
-                game.input_to_output(f"Imp deals {damage*2} to {player.get_player_name()}")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
                 player.lose_hp(damage*2)
             else:
-                game.input_to_output(f"\nImp deals {damage} to {player.get_player_name()}")
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
                 player.lose_hp(damage)
         else:
             game.input_to_output(f"{self.name} has been defeated!")
@@ -162,6 +161,19 @@ class Imp:
 # Game Class
 
 class Game:
+    # Random Enemy Names Class Attribute
+    ENEMY_NAMES = [
+    "Abaddon", "Azazel", "Balrog", "Belphegor", "Beleth", "Cerberon", "Daemonis", "Diavolos", "Erebus", "Hecatross",
+    "Infernum", "Malphas", "Zarathus", "Apollyon", "Asmodeus", "Barbatos", "Bathin", "Bilegor", "Caligoth", "Choronzon",
+    "Dagonis", "Eligos", "Furcas", "Galthor", "Hadeson", "Iblith", "Jezalthar", "Karnathos", "Lilithon", "Lucianor",
+    "Malthael", "Morgrith", "Nergash", "Nyxathos", "Ozarath", "Pazuthar", "Qalzor", "Rahvok", "Rimmonis", "Samael",
+    "Scylthos", "Seraxis", "Shalgaroth", "Tanaros", "Thalgrin", "Torvaloth", "Umbraxis", "Valtharion", "Velgorth", "Xaziron",
+    "Zarvok", "Zerathis", "Blightborn", "Dreadveil", "Hellforge", "Soulflayer", "Bloodpyre", "Shadowbane", "Doomcaller", "Infernal",
+    "Painbringer", "Darkthorn", "Flamewretch", "Ashveil", "Doomrend", "Shadowspire", "Hellshade", "Gravetalon", "Soulburn", "Wretchfiend",
+    "Chaosfang", "Maliceborn", "Deathwhisper", "Fiendgrin", "Voidspike", "Hellmaw", "Boneclaw", "Blightfang", "Netherthorn", "Infernalor",
+    "Bloodveil", "Soulmire", "Dreadspire", "Nightshade", "Darkspire", "Venomborn", "Voidmaw", "Pyrefiend", "Netherlord", "Blazewrath",
+    "Plaguespire", "Hellwrath", "Foulthorn", "Dreadmaw", "Deathforge", "Rotbane", "Voidrend", "Cinderfang", "Flamescourge", "Maligore"
+]
     def __init__(self):
         self.primary_window_height = 630
         self.primary_window_width = 1000
@@ -175,32 +187,7 @@ class Game:
         self.med_floors = self.num_of_floors//3
         self.hard_floors = self.num_of_floors//3
         self.easy_floors += (self.num_of_floors%3)
-        self.enemy_names = [
-    "Venus", "Grimfang", "Blightbane", "Dreadmire", "Shadeclaw",
-    "Wraithsong", "Ashstorm", "Soulrend", "Nightshade", "Frostbite",
-    "Doombringer", "Ironfang", "Cinderbane", "Bloodshroud", "Darkthorn",
-    "Stoneheart", "Vortex", "Deathweaver", "Frostlash", "Venomstrike",
-    "Skullcrusher", "Flameheart", "Gloomspire", "Shadowrend", "Thunderclaw",
-    "Blackthorn", "Soulflare", "Fangstorm", "Gravebane", "Hellfire",
-    "Bladewraith", "Corrosive", "Doomfury", "Nightstalker", "Baneclaw",
-    "Gravefang", "Vileheart", "Ragehowl", "Lurker", "Shadowbane",
-    "Soulcrusher", "Ravager", "Dreadwolf", "Phantom", "Cinderclaw",
-    "Ironmaw", "Bloodfang", "Plagueborn", "Vampyre", "Skullmaw",
-    "Hollowfang", "Stormrage", "Soulmaw", "Gravecaller", "Vileclaw",
-    "Frostfang", "Ashen", "Doomstalker", "Nightmaw", "Wraithbane",
-    "Obsidian", "Shadefang", "Witchbane", "Hellsworn", "Flarefang",
-    "Thunderfang", "Soulshred", "Mawclaw", "Dreadfang", "Darkflame",
-    "Cursed", "Venomlash", "Frostmaw", "Ravencall", "Skullflame",
-    "Vengeful", "Blightstorm", "Phantomclaw", "Hellspawn", "Nightbringer",
-    "Stormfang", "Ironclaw", "Lurking", "Crimsonfang", "Graveflame",
-    "Soulblight", "Frostbane", "Dreadclaw", "Fangsoul", "Gloombane",
-    "Blightspike", "Mirefang", "Bloodbane", "Darkfang", "Fireclaw",
-    "Venombite", "Ashclaw", "Stormwraith", "Lichclaw", "Doomflame",
-    "Fangstrike", "Witchclaw", "Hellclaw", "Ragefang", "Blightclaw",
-    "Shadowflame", "Wraithclaw", "Skullblight", "Nightfury", "Soulfang",
-    "Blightmaw", "Froststrike", "Hollowclaw", "Vilefang", "Grimsoul",
-    "Cindersoul", "Frostshroud", "Dreadblight", "Bloodflame", "Shadowspike"
-]
+
 
 
 # Player Drops
@@ -217,7 +204,7 @@ class Game:
             player.hp_potions += 1
             game.input_to_output("\nYou found a HP potion!\n")
         if better_weapon_chance < 15:
-            player.attack_power += 10
+            player.attack_power += 5
             game.input_to_output("\nYou found a better weapon!")
             game.input_to_output("Your attack power has increased\n")
         if hp_potion_chance >= 15 and better_weapon_chance >= 15 and gold_chance >= 30:
@@ -283,7 +270,7 @@ class Game:
     def battle_menu(self, player, enemy):
         self.input_to_output("\nWhat will you do?")
         self.input_to_output("1. Attack")
-        self.input_to_output("2. Use HP Potion")
+        self.input_to_output(f"2. Use HP Potion (You currently have {player.player_hp} hp)")
         self.input_to_output("3. Shop\n")
         self.wait_for_input()
         if self.user_input == "1":
@@ -314,7 +301,7 @@ class Game:
             elif self.user_input == "2":
                 if player.gold >= 100:
                     player.gold -= 100
-                    player.attack_power += 10
+                    player.attack_power += 5
                     self.input_to_output("\nYou bought a better weapon!")
                     self.input_to_output("Your attack power has increased\n")
                 else:
@@ -340,13 +327,20 @@ class Game:
         round = 1
         for i in range(self.easy_floors):
             self.input_to_output(f"\nFloor {round}\n")
-            num_of_spider = random.randint(1, 5)
-            self.input_to_output(f"You see {num_of_spider} spiders ahead!\n")
+            num_of_spider = random.randint(1, 2)
+            num_of_slime = random.randint(1, 4)
+            self.input_to_output(f"You see {num_of_spider} spiders and {num_of_slime} slimes ahead!\n")
             enemies = []
             for j in range(num_of_spider):
                 spider_name = random.choice(self.enemy_names) + " the spider"
+                self.enemy_names.remove(spider_name.split(" the spider")[0]) # Remove the name from the list so it doesn't repeat
                 spider = Spider(spider_name)
-                enemies.append(spider) 
+                enemies.append(spider)
+            for k in range(num_of_slime):
+                slime_name = random.choice(self.enemy_names) + " the slime"
+                self.enemy_names.remove(slime_name.split(" the slime")[0])
+                slime = Slime(slime_name)
+                enemies.append(slime) 
             random.shuffle(enemies)
             for enemy in enemies:
                 self.input_to_output(f"\n{enemy.name} appears!")
@@ -365,10 +359,12 @@ class Game:
             enemies = []
             for j in range(num_of_spider):
                 spider_name = random.choice(self.enemy_names) + " the spider"
+                self.enemy_names.remove(spider_name.split(" the spider")[0])
                 spider = Spider(spider_name)
                 enemies.append(spider) 
             for k in range(num_of_skeleton):
                 skeleton_name = random.choice(self.enemy_names) + " the skeleton"
+                self.enemy_names.remove(skeleton_name.split(" the skeleton")[0])
                 skeleton = Skeleton(skeleton_name)
                 enemies.append(skeleton) 
             random.shuffle(enemies)
@@ -390,14 +386,17 @@ class Game:
             enemies = []
             for j in range(num_of_skeleton):
                 skeleton_name = random.choice(self.enemy_names) + " the skeleton"
+                self.enemy_names.remove(skeleton_name.split(" the skeleton")[0])
                 skeleton = Skeleton(skeleton_name)
                 enemies.append(skeleton) 
             for k in range(num_of_orc):
                 orc_name = random.choice(self.enemy_names) + " the orc"
+                self.enemy_names.remove(orc_name.split(" the orc")[0])
                 orc = Orc(orc_name)
                 enemies.append(orc) 
             for l in range(num_of_imp):
                 imp_name = random.choice(self.enemy_names) + " the imp"
+                self.enemy_names.remove(imp_name.split(" the imp")[0])
                 imp = Imp(imp_name)
                 enemies.append(imp) 
             random.shuffle(enemies)
@@ -421,6 +420,7 @@ class Game:
         self.med_floors = self.num_of_floors//3
         self.hard_floors = self.num_of_floors//3
         self.easy_floors += (self.num_of_floors%3)
+        self.enemy_names = self.ENEMY_NAMES.copy()
         self.input_to_output("WELCOME TO THE GAME")
         self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon\n")
         self.input_to_output("Please enter your character name: ")
