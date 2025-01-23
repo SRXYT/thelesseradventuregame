@@ -435,6 +435,10 @@ class Game:
         self.input_to_output("Please enter your character name: ")
         self.wait_for_input()  # Wait for user input
         player_name = self.user_input  # Get the entered name
+        while len(player_name) > 17:
+            self.input_to_output("\nName must be less than 17 characters\n")
+            self.wait_for_input()
+            player_name = self.user_input
         player.set_player_name(player_name)
         player.reset_stats()
         self.update_player_name_label(player.get_player_name())
@@ -472,17 +476,26 @@ class Game:
             # first argument ids the path to the .ttf or .otf file
             font = dpg.add_font("assets/fonts/scb.ttf", 20)
 
+        # # add an image registry
+        # with dpg.texture_registry(show=False):
+        # # Load the image and get its dimensions
+        #     width, height, channels, data = dpg.load_image("assets/bg/Brickwall.png")
+        #     # Add the image to the texture registry
+        #     dpg.add_static_texture(width, height, data, tag="bg_image")
+
         # Main Window
         with dpg.window(label="Main Window", tag="primary_window"):
+            # with dpg.draw_layer(width=self.primary_window_width, height=self.primary_window_height):
+            #     dpg.draw_image("bg_image", pmin=(0, 0), pmax=(self.primary_window_width - 10, self.primary_window_height - 43))
             # Player Stats
-            dpg.add_text(default_value="Name: ", tag="player_name_label", pos=(10, self.primary_window_height-100))
-            dpg.add_text(default_value="HP: 0", tag="player_hp_label", pos=(100, self.primary_window_height-100))
-            dpg.add_text(default_value="Gold: 0", tag="gold_label", pos=(200, self.primary_window_height-100))
-            dpg.add_text(default_value="HP Potions: 0", tag="hp_potions_label", pos=(380, self.primary_window_height-100))
-            dpg.add_text(default_value="Additional Damage: 0", tag="weapon_attack_label", pos=(590, self.primary_window_height-100))
+            dpg.add_text(default_value="Name: ", tag="player_name_label", pos=(10, self.primary_window_height-105))
+            dpg.add_text(default_value="HP: 0", tag="player_hp_label", pos=(220, self.primary_window_height-105))
+            dpg.add_text(default_value="Gold: 0", tag="gold_label", pos=(320, self.primary_window_height-105))
+            dpg.add_text(default_value="HP Potions: 0", tag="hp_potions_label", pos=(500, self.primary_window_height-105))
+            dpg.add_text(default_value="Additional Damage: 0", tag="weapon_attack_label", pos=(710, self.primary_window_height-105))
             # Input box
-            dpg.add_input_text(width=self.primary_window_width-37, pos=(10, self.primary_window_height-70),
-                               callback=lambda s, a, u: self.input_to_output(a), on_enter=True, tag="input_box")
+            dpg.add_input_text(width=self.primary_window_width-37, pos=(10, self.primary_window_height-75),
+                               callback=lambda s, a, u: self.input_to_output(a), on_enter=True, tag="input_box", hint="Enter text here... (must be less than 17 characters)")
 
         # Output Box
         with dpg.window(label="Output",tag="output_window" ,show=True, width=self.output_window_width, height=self.output_window_height,
