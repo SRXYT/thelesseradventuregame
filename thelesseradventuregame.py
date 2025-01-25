@@ -247,6 +247,7 @@ class Game:
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
+        self.input_to_output(f"Total number of enemies defeated: {self.total_num_enemies}")
         self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
@@ -265,6 +266,7 @@ class Game:
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
+        self.input_to_output(f"Total number of enemies defeated: {self.total_num_enemies}")
         self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
@@ -338,6 +340,8 @@ class Game:
             self.input_to_output(f"\nFloor {round}\n")
             num_of_spider = random.randint(1, 2)
             num_of_slime = random.randint(1, 4)
+            self.total_num_enemies += num_of_spider
+            self.total_num_enemies += num_of_slime
             self.input_to_output(f"You see {num_of_spider} spiders and {num_of_slime} slimes ahead!\n")
             enemies = []
             for j in range(num_of_spider):
@@ -364,6 +368,8 @@ class Game:
             self.input_to_output(f"\nFloor {round}\n")
             num_of_spider = random.randint(1, 3)
             num_of_skeleton = random.randint(2, 5)
+            self.total_num_enemies += num_of_spider
+            self.total_num_enemies += num_of_skeleton
             self.input_to_output(f"You see {num_of_spider} spiders and {num_of_skeleton} skeletons ahead!\n")
             enemies = []
             for j in range(num_of_spider):
@@ -391,6 +397,9 @@ class Game:
             num_of_skeleton = random.randint(1, 2)
             num_of_orc = random.randint(2, 4)
             num_of_imp = random.randint(2, 4)
+            self.total_num_enemies += num_of_skeleton
+            self.total_num_enemies += num_of_orc
+            self.total_num_enemies += num_of_imp
             self.input_to_output(f"You see {num_of_skeleton} skeletons, {num_of_orc} orcs and {num_of_imp} imps ahead!\n")
             enemies = []
             for j in range(num_of_skeleton):
@@ -430,6 +439,7 @@ class Game:
         self.hard_floors = self.num_of_floors//3
         self.easy_floors += (self.num_of_floors%3)
         self.enemy_names = self.ENEMY_NAMES.copy()
+        self.total_num_enemies = 0
         self.input_to_output("WELCOME TO THE GAME")
         self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon\n")
         self.input_to_output("Please enter your character name: ")
