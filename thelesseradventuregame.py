@@ -3,7 +3,9 @@ import random
 import time as t
 
 # Intended to be unique every time you play it
-
+# Make sure to do pip install dearpygui using python 3.13.1 x64 bit
+# place the assets folder in the same directory as the python file and then run
+# Created by LP
 # Player Class
 
 class Player:
