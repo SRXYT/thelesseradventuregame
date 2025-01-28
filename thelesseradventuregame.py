@@ -4,7 +4,7 @@ import time as t
 
 # Intended to be unique every time you play it
 # Make sure to do pip install dearpygui using python 3.13.1 x64 bit
-# place the assets folder in the same directory as the python file and then run
+# place the font file in a "font" folder in the same directory as the python file and then run
 # Created by LP
 # Player Class
 
@@ -522,7 +522,7 @@ class Game:
         # add a font registry
         with dpg.font_registry():
             # first argument ids the path to the .ttf or .otf file
-            font = dpg.add_font("assets/fonts/scb.ttf", 20)
+            font = dpg.add_font("font/scb.ttf", 20)
 
         # # add an image registry
         # with dpg.texture_registry(show=False):
