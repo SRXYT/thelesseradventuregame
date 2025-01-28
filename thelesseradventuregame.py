@@ -55,7 +55,7 @@ class Spider:
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(1, 10)
-        if self.hp >= 0:
+        if self.hp > 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
@@ -79,7 +79,7 @@ class Slime:
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(1, 10)
-        if self.hp >= 0:
+        if self.hp > 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
@@ -103,7 +103,7 @@ class Skeleton:
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(10, 20)
-        if self.hp >= 0:
+        if self.hp > 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
@@ -127,7 +127,7 @@ class Orc:
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(20, 30)
-        if self.hp >= 0:
+        if self.hp > 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
@@ -151,7 +151,29 @@ class Imp:
     def attack(self, player):
         is_crit = random.randint(1,200)
         damage = random.randint(30, 40)
-        if self.hp >= 0:
+        if self.hp > 0:
+            if is_crit < 25:
+                game.input_to_output("\nCRIT DAMAGE!")
+                game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
+                player.lose_hp(damage*2)
+            else:
+                game.input_to_output(f"\n{self.name} deals {damage} to {player.get_player_name()}")
+                player.lose_hp(damage)
+        else:
+            game.input_to_output(f"{self.name} has been defeated!")
+
+class Dragon:
+    def __init__(self, name):
+        self.hp = 500
+        self.name = name
+    
+    def lose_hp(self, hp):
+        self.hp -= hp
+    
+    def attack(self, player):
+        is_crit = random.randint(1,200)
+        damage = random.randint(50, 100)
+        if self.hp > 0:
             if is_crit < 25:
                 game.input_to_output("\nCRIT DAMAGE!")
                 game.input_to_output(f"{self.name} deals {damage*2} to {player.get_player_name()}")
@@ -249,6 +271,7 @@ class Game:
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
+        self.input_to_output(f"Total number of enemies defeated: {self.total_num_enemies}")
         self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
@@ -260,13 +283,14 @@ class Game:
 # Game Win
 
     def game_win(self):
-        self.input_to_output("Congratulations!")
-        self.input_to_output("You have defeated the dragon and saved the kingdom!\n")
+        self.input_to_output("\n\nCongratulations!!!")
+        self.input_to_output("You have defeated the dragon and saved the kingdom!!\n")
         self.input_to_output("\nStats:\n")
         self.input_to_output(f"Name: {player.get_player_name()}")
         self.input_to_output(f"Gold: {player.gold}")
         self.input_to_output(f"HP Potions: {player.hp_potions}")
         self.input_to_output(f"Weapon attack gains: {player.attack_power}")
+        self.input_to_output(f"Total number of enemies defeated: {self.total_num_enemies}")
         self.input_to_output("Would you like to play again? (yes/no)\n")
         self.wait_for_input()
         if self.user_input.lower() == "yes":
@@ -360,6 +384,7 @@ class Game:
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
+                self.total_num_enemies += 1
                 self.drops(player)
             round += 1
         for i in range(self.med_floors):
@@ -386,6 +411,7 @@ class Game:
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
+                self.total_num_enemies += 1
                 self.drops(player)
             round += 1
         for i in range(self.hard_floors):
@@ -418,9 +444,28 @@ class Game:
                     if player.player_hp <= 0:
                         self.input_to_output("You have been defeated!")
                         self.game_over()
+                self.total_num_enemies += 1
                 self.drops(player)
             round += 1
+        self.input_to_output("\nYou have reached the final floor!")
+        self.input_to_output("The dragon awaits you ahead!")
+        self.input_to_output("Are you ready to face the dragon? (yes/no)\n")
+        self.wait_for_input()
+        if self.user_input.lower() == "yes":
+            self.input_to_output("\nYou have entered the dragon's lair!\n")
+        else:
+            self.input_to_output("\nYou have entered the dragon's lair anyway!\n")
+        dragon_name = random.choice(self.enemy_names) + " The Dragon"
+        dragon = Dragon(dragon_name)
+        self.input_to_output(f"\n{dragon.name} appears!")
+        while player.player_hp > 0 and dragon.hp > 0:
+            self.battle_menu(player, dragon)
+            if player.player_hp <= 0:
+                self.input_to_output("You have been defeated!")
+                self.game_over()
+        self.game_win()
 
+        
 # Initialize Game
 
     def init_game(self, player):
@@ -432,6 +477,7 @@ class Game:
         self.hard_floors = self.num_of_floors//3
         self.easy_floors += (self.num_of_floors%3)
         self.enemy_names = self.ENEMY_NAMES.copy()
+        self.total_num_enemies = 0
         self.input_to_output("WELCOME TO THE GAME")
         self.input_to_output("You are a brave adventurer who has been tasked with saving the kingdom from the evil dragon\n")
         self.input_to_output("Please enter your character name: ")
